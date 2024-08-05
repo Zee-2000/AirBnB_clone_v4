@@ -65,19 +65,19 @@ class FileStorage:
             if key in self.__objects:
                 del self.__objects[key]
 
-    def close(self):
-        """call reload() method for deserializing the JSON file to objects"""
-        self.reload()
-
     def get(self, cls, id):
-        """one or none"""
-        key = "{}.{}".format(cls.__name__, id)
-        if key in self.__objects.keys():
-            return self.__objects[key]
+        import models
+        """Returns the object based on the class and its ID, or None"""
+        key = cls + '.' + id
+        if key in models.storage.all():
+            return (models.storage.all()[key])
         return None
 
     def count(self, cls=None):
-        """obj in storge"""
-        if cls is not None:
-            return len(self.all(cls))
-        return len(self.__objects)
+        """Returns the number of objects in storage matching the given class"""
+        obj = self.all(cls)
+        return len(obj)
+
+    def close(self):
+        """call reload() method for deserializing the JSON file to objects"""
+        self.reload()
